@@ -78,6 +78,16 @@
       margin-top: 10px;
       display: block;
     }
+    #thank-you {
+      display: none;
+      margin-top: 30px;
+      background-color: #dff0d8;
+      color: #3c763d;
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -105,9 +115,9 @@
 
   <img src="abby.jpg" alt="Abby, Ishwar's dog" />
 
-  <!-- NEW Booking Form -->
   <h2 style="margin-top:40px;">Book a Walk</h2>
-  <form action="https://formspree.io/f/xeokevvq" method="POST">
+
+  <form id="walkForm" action="https://formspree.io/f/xeokevvq" method="POST">
     <label>Your Name:<br />
       <input type="text" name="name" required />
     </label><br />
@@ -121,7 +131,7 @@
     </label><br />
 
     <label>Preferred Walk Time:<br />
-      <input type="text" name="time" placeholder="e.g., 3pm Tuesday" />
+      <input type="datetime-local" name="time" required />
     </label><br />
 
     <label>Notes:<br />
@@ -130,5 +140,33 @@
 
     <button type="submit">Send Request</button>
   </form>
+
+  <div id="thank-you">Thanks! Your request has been sent.</div>
+
+  <script>
+    const form = document.getElementById('walkForm');
+    const thankYou = document.getElementById('thank-you');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const data = new FormData(form);
+      fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).then(response => {
+        if (response.ok) {
+          form.style.display = 'none';
+          thankYou.style.display = 'block';
+        } else {
+          alert('Oops! There was a problem.');
+        }
+      }).catch(error => {
+        alert('Oops! There was a problem submitting the form.');
+      });
+    });
+  </script>
 </body>
 </html>
